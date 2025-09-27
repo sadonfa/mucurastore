@@ -10,7 +10,7 @@
     }
     
     /* Asegurar que el contenido principal ocupe todo el ancho */
-    .principal__content {
+    .content__producto{
         width: 100% !important;
         margin-left: 0 !important;
     }
@@ -20,8 +20,8 @@
         background-color: #fff !important;
         .main-content, 
         .content__producto { 
-            width: 80mm !important; 
-            max-width: 80mm !important;
+            width: 90mm !important; 
+            max-width: 90mm !important;
             /* Elimina márgenes por si el navegador los añade automáticamente */
             margin: 0 !important;
             padding: 0 !important;
