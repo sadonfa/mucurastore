@@ -20,22 +20,40 @@
         background-color: #fff !important;
         .main-content, 
         .content__producto { 
-            width: 90mm !important; 
-            max-width: 90mm !important;
+            width: 80mm !important; 
+            max-width: 80mm !important;
             /* Elimina márgenes por si el navegador los añade automáticamente */
             margin: 0 !important;
             padding: 0 !important;
+
+            
+            /* CLAVE: Reducir el tamaño de la fuente para que el texto quepa */
+            font-size: 8pt; 
     }
 
     /* 3. Asegurar que las tablas se ajusten al nuevo ancho */
     table {
         width: 100% !important;
+        /* Forzar que las tablas no tengan bordes ni espacios extra */
+        border-collapse: collapse; 
     }
 
-    /* 4. Ajustar el tamaño de la fuente para que quepa (opcional) */
-    body {
-        font-size: 10pt; /* O un tamaño más pequeño si 12pt es demasiado grande */
+    td, th {
+        word-wrap: break-word; /* Asegura que las palabras largas se rompan */
+        white-space: normal;  /* Permite que el texto se envuelva en varias líneas */
+        padding: 2px;
     }
+
+    .cantidad-col, .precio-col {
+        width: 15% !important; 
+    }
+
+    h1, h2, p, strong {
+        font-size: 8pt; 
+        line-height: 1.2; /* Reduce el espacio entre líneas */
+    }
+
+    
 }
 
     /* Opcional: Mostrar la URL del sitio web o encabezado de la empresa en la parte superior */
