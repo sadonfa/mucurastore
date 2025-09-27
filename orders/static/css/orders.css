@@ -25,10 +25,18 @@
             /* Elimina márgenes por si el navegador los añade automáticamente */
             margin: 0 !important;
             padding: 0 !important;
+             /* FUENTE CLAVE para impresoras térmicas */
+            font-family: "Courier New", "Lucida Console", sans-serif !important;
+            font-size: 8pt !important; /* Asegura un tamaño compacto */
+            line-height: 1.1; /* Reduce el espacio entre líneas */
 
             
             /* CLAVE: Reducir el tamaño de la fuente para que el texto quepa */
             font-size: 8pt; 
+             /* FUENTE CLAVE para impresoras térmicas */
+        font-family: "Courier New", "Lucida Console", sans-serif !important;
+        font-size: 8pt !important; /* Asegura un tamaño compacto */
+        line-height: 1.1; /* Reduce el espacio entre líneas */
     }
 
     /* 3. Asegurar que las tablas se ajusten al nuevo ancho */
