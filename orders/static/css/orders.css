@@ -18,7 +18,25 @@
     /* Eliminar sombras y colores de fondo para ahorrar tinta */
     body {
         background-color: #fff !important;
+        .main-content, 
+        .content__producto { 
+            width: 80mm !important; 
+            max-width: 80mm !important;
+            /* Elimina márgenes por si el navegador los añade automáticamente */
+            margin: 0 !important;
+            padding: 0 !important;
     }
+
+    /* 3. Asegurar que las tablas se ajusten al nuevo ancho */
+    table {
+        width: 100% !important;
+    }
+
+    /* 4. Ajustar el tamaño de la fuente para que quepa (opcional) */
+    body {
+        font-size: 10pt; /* O un tamaño más pequeño si 12pt es demasiado grande */
+    }
+}
 
     /* Opcional: Mostrar la URL del sitio web o encabezado de la empresa en la parte superior */
     /* Puedes añadir un logo oculto que solo se muestre en @media print */
