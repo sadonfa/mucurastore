@@ -1,0 +1,98 @@
+{% extends "layouts/base.html" %}
+{% block title %} {{title}} {% endblock title %}
+
+{% block content %}
+
+<div class="content__producto">
+    <div class="min_header">
+        <h1 class="producto__title">Detalle del Pedido #{{ order.pk }}</h1>
+        <a href="{% url 'order_update' order.pk %}" class="add-icon"><i class="fa-solid fa-pen-to-square"></i></a> 
+    </div>
+    
+    <fieldset>
+        <legend>Información General</legend>
+        <p><strong>Cliente:</strong> {{ order.cliente.name }} {{ order.cliente.lastname }} ({{ order.cliente.email }})</p>
+        <p><strong>Título:</strong> {{ order.name }}</p>
+        <p><strong>Fecha de Creación:</strong> {{ order.created|date}}</p>
+        <p><strong>Descripción/Notas:</strong> {{ order.description|default:"(Sin descripción)" }}</p>
+        
+        
+         <p><strong>Forma de Pago:</strong> {{ order.get_forma_pago_display }}</p>
+         <br />
+         <form id="finish-order-form" method="POST" action="{% url 'order_finish_and_new' order.pk %}" style="display: none;">
+        {% csrf_token %}
+        </form>
+        <button onclick="printAndFinish()">Imprimir y Crear Nuevo Pedido</button>
+         {% comment %} <button onclick="imprimirDesprendible()">Imprimir Desprendible</button> {% endcomment %}
+        {% comment %} <a href="{% url 'order_list' %}">Volver a la Lista</a> {% endcomment %}
+    </fieldset>
+
+    <hr>
+
+    <h2>Artículos Incluidos</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Descripción del Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario (Cash)</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+       <tbody>
+            {# **Elimina la línea {% with total_pedido=0 %} y {% with subtotal=... %}** #}
+            
+            {% for article in articles %}
+                <tr>
+                    <td>{{ article.product.name }}</td>
+                    <td>{{ article.product.description|default:"N/A" }}</td>
+                    <td>{{ article.cantidad }}</td>
+                    <td>${{ article.cash|floatformat:2 }}</td>
+                    
+                    {# Usa el atributo 'subtotal' calculado en la vista #}
+                    <td>${{ article.subtotal|floatformat:2 }}</td> 
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">Este pedido no tiene artículos asociados.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="text-align: right;"><strong>TOTAL DEL PEDIDO:</strong></td>
+                
+                {# Usa la variable 'total_pedido' calculada en la vista #}
+                <td><strong>${{ total_pedido|floatformat:2 }}</strong></td>
+            </tr>
+        </tfoot>
+           
+    </table>
+
+</div>
+
+<script>
+    function imprimirDesprendible() {
+        // Opción 1 (Simple): Imprime todo el contenido visible de la ventana
+        window.print();
+        
+        /* Opción 2 (Avanzada): 
+        Si quieres imprimir solo el desprendible (la tabla y detalles), 
+        debes usar JavaScript más avanzado para ocultar el menú lateral 
+        y el encabezado antes de llamar a window.print(), y luego restaurarlos.
+        */
+    }
+      function printAndFinish() {
+        // 1. Ejecutar la impresión del documento (con el CSS de @media print)
+        window.print();
+        
+        // 2. Enviar el formulario oculto después de un breve retraso
+        // El retraso (ej: 500ms) es para darle tiempo al navegador de iniciar la ventana de impresión
+        setTimeout(function() {
+            document.getElementById('finish-order-form').submit();
+        }, 500); 
+    }
+</script>
+    {% endblock content %}

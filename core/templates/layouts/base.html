@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+      <link rel="stylesheet"
+          href="{% static 'fonts/fontawesome-free-6.1.2-web/css/all.min.css' %}" />
+   
+    <link rel="stylesheet" href="{% static 'css/reset.css' %} " />
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %} " />
+    <link rel="stylesheet" href="{% static 'css/base.css' %} " />
+    <link rel="stylesheet" href="{% static 'css/products.css' %} " />
+    <link rel="stylesheet" href="{% static 'css/orders.css' %} " />
+
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    
+    {% comment %} HEADER  {% endcomment %}
+    <header class="header">
+        <div class="header__logo">
+            <h1 class=logo__text >Mucura Store</h1>
+        </div>
+        <div class="header__info">
+            {% if user.is_authenticated %}
+                Usuario: <strong>{{ user.username }}</strong>
+                | 
+                 <form method="post" action="{% url 'logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
+                Cerrar Sesión
+            </button>
+        </form>
+            {% else %}
+                <a href="{% url 'login' %}">Iniciar Sesión</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="principal">
+
+         {% comment %} SIDEBAR  {% endcomment %}
+    <aside class="aside">
+        <ul class="aside__nav">
+            <li class="nav__item">
+               <a href=" {% url 'home' %} ">Home</a> </li>
+
+                {% if user.is_authenticated %}
+                     {% if perms.orders.view_orders %} 
+                        <li class="nav__item"> <a href="{% url 'order_create' %}"> Pedidos </a> </li>
+                     {% endif %}
+                    
+                        <li class="nav__item"> <a href="{% url 'order_list' %}"> Lista de pedidos </a> </li>
+                        
+                     {% if perms.customers.view_customers %} 
+                        <li class="nav__item">
+                            <a href="{% url 'customer_list' %}">Clientes</a></li>
+                    {% endif %}
+                    {% if perms.products.view_products %} 
+                        <li class="nav__item">
+                        <a href="{% url 'product_list' %}">Productos </a> 
+                        </li>
+                    {% endif %}
+             {% endif %}
+        </ul>
+
+        <footer class="footer">
+        &copy; Mucura Store 2025
+    </footer>
+    </aside>
+    {% comment %} CONTENT  {% endcomment %}
+    
+    <div class="principal__content">
+    {% block content %}{% endblock content %}
+    </div>
+    </div>
+
+   
+
+    
+
+    {% comment %} FOOTER  {% endcomment %}
+    
+</body>
+</html>

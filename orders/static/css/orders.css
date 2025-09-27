@@ -1,0 +1,34 @@
+/* Esto se aplica SOLAMENTE cuando el navegador está imprimiendo */
+@media print {
+    /* Ocultar elementos de navegación y de interfaz */
+    .header,           /* Oculta la barra superior (Mucura Store) */
+    .aside,          /* Oculta la barra lateral de navegación (Pedidos, Clientes...) */
+    .actions,          /* Oculta botones de Editar/Eliminar/Imprimir */
+    button,            /* Oculta todos los botones */
+    a[href] {          /* Oculta enlaces (opcional, deja solo el texto) */
+        display: none !important;
+    }
+    
+    /* Asegurar que el contenido principal ocupe todo el ancho */
+    .principal__content {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+    
+    /* Eliminar sombras y colores de fondo para ahorrar tinta */
+    body {
+        background-color: #fff !important;
+    }
+
+    /* Opcional: Mostrar la URL del sitio web o encabezado de la empresa en la parte superior */
+    /* Puedes añadir un logo oculto que solo se muestre en @media print */
+}
+
+.iconos{
+  width: 8rem;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* border: 1px solid red; */
+}

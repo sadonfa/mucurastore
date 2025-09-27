@@ -1,0 +1,44 @@
+{% extends "layouts/base.html" %}
+{% block title %} {{title}} {% endblock title %}
+
+{% block content %}
+
+<div class="content__producto">
+
+    <h1 class="producto__title">Productos</h1>
+    <a href="{% url 'formulario' %}"> <i class="fa-solid fa-plus"></i> </a>
+
+   <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Categoría</th>
+                <th>Editar</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products  %}
+            <tr>
+                <td> {{product.id}} </td>
+                <td>{{product.name}}</td>
+                <td>{{product.descriptions}}</td>
+                <td> {{product.price}}  </td>
+                <td>{{product.stock}}</td>
+                <td>{{product.category}}</td>
+                <td class="table__edit"><a href="{% url 'updateproduct' product.id %}"><i class="fa-regular fa-pen-to-square"></i></a> </td>
+            </tr>
+            {% endfor %}
+          
+        </tbody>
+    </table>
+
+
+
+</div>
+
+{% endblock content %}

@@ -1,0 +1,37 @@
+{% extends "layouts/base.html" %}
+{% block title %} {{title}} {% endblock title %}
+
+{% block content %}
+<div class="content__producto">
+    <div class="min_header">
+        <h1 class="producto__title">Lista de Productos</h1>
+        <a href="{% url 'product_create' %}" class="add-icon"><i class="fa-solid fa-square-plus"></i></a>
+    </div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Categoría</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>${{ product.price }}</td>
+            <td>{{ product.stock }}</td>
+            <td>{{ product.category.name }}</td>
+            <td class="table__accion">
+                <a href="{% url 'product_update' product.pk %}"><i class="fa-regular fa-pen-to-square"></i></a> |
+                <a href="{% url 'product_delete' product.pk %}"><i class="fa-solid fa-trash"></i></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock content %}

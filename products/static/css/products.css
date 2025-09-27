@@ -1,0 +1,88 @@
+.producto__title{
+    border-bottom: 1px solid var(--color-border-reviews);
+    padding-bottom: 1rem;
+}
+    .min_header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+   /* Estilos básicos para que la tabla se vea mejor */
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table__edit{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+          /* Estilos básicos para mejor presentación */
+      
+        .form-container {
+            max-width: 500px;
+            /* margin: auto; */
+            /* background: white; */
+            padding: 20px;
+            padding-left: 0;
+            border-radius: 8px;
+            /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="password"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Asegura que el padding no cambie el ancho total */
+        }
+        textarea {
+            resize: vertical;
+        }
+
+        input[type="submit"],
+        button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover,
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .table__accion{
+            display: flex;
+            justify-content: space-evenly;
+        }

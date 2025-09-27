@@ -1,0 +1,88 @@
+{% extends "layouts/base.html" %}
+{% block title %} {{title}} {% endblock title %}
+
+{% block content %}
+
+<div class="content__producto">
+<h1>{{ title }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <fieldset>
+        <legend>Datos del Pedido</legend>
+        {{ form.as_p }}
+    </fieldset>
+
+    <fieldset>
+        <legend>Artículos del Pedido</legend>
+        
+        {{ formset.management_form }}
+        
+        {% for article_form in formset %}
+            <div class="article-line">
+                {{ article_form.id }}
+                
+                {{ article_form.product.label_tag }} {{ article_form.product }}
+                {{ article_form.cantidad.label_tag }} {{ article_form.cantidad }}
+                {{ article_form.cash.label_tag }} {{ article_form.cash }}
+                
+                {% if article_form.instance.pk %}
+                    {{ article_form.DELETE.label_tag }} {{ article_form.DELETE }}
+                {% endif %}
+                
+                {% for error in article_form.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <hr>
+        {% endfor %}
+        
+        </fieldset>
+
+    <button type="submit">Guardar Pedido Completo</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const formsetContainer = document.querySelector('fieldset:nth-of-type(2)'); // El contenedor de artículos
+
+        // Función que maneja el cambio en el selector de producto
+        const handleProductChange = (event) => {
+            if (event.target.name.endsWith('-product')) {
+                const productSelect = event.target;
+                const productID = productSelect.value;
+                
+                // Encontrar la línea del formset y el campo 'cash' asociado
+                const articleLine = productSelect.closest('.article-line');
+                const cashInput = articleLine.querySelector('input[name$="-cash"]');
+                
+                if (productID) {
+                    // Llamada AJAX a la vista de Django
+                    fetch(`{% url 'api_get_price' %}?product_id=${productID}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.price) {
+                                // Rellenar el campo 'cash' con el precio de la DB
+                                cashInput.value = data.price;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error al obtener el precio:', error);
+                            cashInput.value = '0.00'; // Fallback
+                        });
+                } else {
+                    cashInput.value = '0.00';
+                }
+            }
+        };
+
+        // Escuchar cambios en cualquier elemento dentro del formsetContainer
+        formsetContainer.addEventListener('change', handleProductChange);
+        
+        // Si usas JavaScript para añadir nuevas líneas al formset, 
+        // asegúrate de que el manejador de eventos (handleProductChange) 
+        // también se aplique a esas nuevas líneas.
+    });
+</script>
+{% endblock content %}

@@ -1,0 +1,66 @@
+{% extends "layouts/base.html" %}
+{% block title %} {{title}} {% endblock title %}
+
+{% block content %}
+
+<div class="content__producto">
+<div class="min_header">
+        <h1 class="producto__title">Listado de Pedidos {% if selected_date %} - Cierre del día {{ selected_date }}{% endif %}</h1>
+<div class="iconos" >
+    <a href="{% url 'order_create' %}" class="add-icon"><i class="fa-solid fa-plus"></i></a>
+    <a href="{% url 'order_export_csv' %}"  class="add-icon"><i class="fa-solid fa-file-excel"></i></a>
+</div>
+        </div>
+
+<h2>Filtro / Cierre Diario</h2>
+<form method="GET" action="{% url 'order_list' %}" style="margin-bottom: 20px;">
+    <label for="date">Seleccionar Fecha:</label>
+    <input type="date" id="date" name="date" value="{{ selected_date|default:'' }}">
+    <button type="submit">Filtrar / Cierre</button>
+    <a href="{% url 'order_list' %}">Mostrar Todos</a>
+</form>
+
+{% if is_cierre %}
+    <div style="margin-top: 20px; padding: 15px; border: 1px solid #007bff; background-color: #e9f5ff; border-radius: 5px;">
+        <h3>📊 Resumen del Cierre Diario ({{ selected_date }})</h3>
+        <p>Total de Pedidos en la lista: <strong>{{ orders|length }}</strong></p>
+        <p>Ventas Totales del Día: <strong>${{ total_sales|floatformat:2 }}</strong></p>
+    </div>
+{% endif %}
+
+
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Título del Pedido</th>
+            <th>Fecha</th>
+            <th>Forma de Pago</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.pk }}</td>
+            <td>{{ order.cliente.name }} {{ order.cliente.lastname }}</td>
+            <td>{{ order.name }}</td>
+            <td>{{ order.created|date:"d M Y H:i" }}</td>
+            <td>{{ order.get_forma_pago_display }}</td> 
+            <td>
+                <a href="{% url 'order_detail' order.pk %}">Ver Detalle</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No se han encontrado pedidos.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</div>
+
+ {% endblock content %}

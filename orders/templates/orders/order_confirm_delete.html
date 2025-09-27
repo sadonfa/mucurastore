@@ -1,0 +1,9 @@
+<h1>Confirmar Eliminación</h1>
+
+<p>¿Estás seguro que deseas eliminar el pedido **#{{ order.pk }}** de **{{ order.cliente.name }}**?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sí, Eliminar</button>
+    <a href="{% url 'order_detail' order.pk %}">No, Cancelar</a>
+</form>

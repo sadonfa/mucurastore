@@ -1,0 +1,48 @@
+{% extends "layouts/inicio.html" %}  
+{% comment %} Asegúrate de cambiar "base.html" por el nombre de tu plantilla base si es diferente {% endcomment %}
+
+{% block title %}Iniciar Sesión{% endblock %}
+
+{% block content %}
+<div class="login__principal" >
+    <h2 class="producto__title">Mucura Store</h2>
+
+    {% if form.errors %}
+        <p style="color: red;">
+            Tu nombre de usuario o contraseña son incorrectos. Por favor, inténtalo de nuevo.
+        </p>
+    {% endif %}
+
+    {% if next %}
+        {% if user.is_authenticated %}
+            <p style="color: blue;">Tu cuenta no tiene acceso a esta página. Para proceder, inicia sesión con una cuenta que tenga autorización.</p>
+        {% else %}
+            <p>Por favor, inicia sesión para ver esta página.</p>
+        {% endif %}
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        <p>
+            <label for="{{ form.username.id_for_label }}">Nombre de Usuario:</label>
+            {{ form.username }}
+        </p>
+
+        <p>
+            <label for="{{ form.password.id_for_label }}">Contraseña:</label>
+            {{ form.password }}
+        </p>
+
+        <p>
+            <input type="submit" value="Acceder">
+            <input type="hidden" name="next" value="{{ next }}">
+        </p>
+    </form>
+    
+    
+    {% comment %} Opcional: Si implementas el restablecimiento de contraseña 
+    <p><a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a></p>  {% endcomment %}
+  
+</div>
+{% endblock %}
