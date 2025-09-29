@@ -7,11 +7,9 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = Orders
         # Solo necesitamos el cliente, el nombre y la descripción para el encabezado.
-        fields = ['cliente', 'name', 'description', 'forma_pago']
+        fields = ['cliente', 'forma_pago']
         labels = {
             'cliente': 'Cliente',
-            'name': 'Título del Pedido',
-            'description': 'Notas del Pedido',
         }
 
 # 2. Formulario para cada línea de Artículo (Article)

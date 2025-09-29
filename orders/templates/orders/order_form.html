@@ -9,12 +9,12 @@
 <form method="POST">
     {% csrf_token %}
 
-    <fieldset>
+    <fieldset class="seccion__form">
         <legend>Datos del Pedido</legend>
         {{ form.as_p }}
     </fieldset>
 
-    <fieldset>
+    <fieldset class="seccion__form">
         <legend>Artículos del Pedido</legend>
         
         {{ formset.management_form }}

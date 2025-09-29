@@ -38,7 +38,7 @@ class Article(models.Model):
     order = models.ForeignKey(Orders, on_delete=models.CASCADE, verbose_name="Pedido")
     product = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name="Producto")
     cantidad = models.IntegerField(default=0, verbose_name="Cantidad")
-    cash= models.DecimalField(max_digits=10, decimal_places=2, validators=[MaxValueValidator(9999.99)])
+    cash= models.DecimalField(max_digits=10, decimal_places=2, validators=[MaxValueValidator(999999.99)])
     created = models.DateField(auto_now_add=True, verbose_name='Creacion' )
     updated = models.DateField(auto_now=True, verbose_name='Actualizacion' )
 

@@ -28,14 +28,14 @@
              /* FUENTE CLAVE para impresoras térmicas */
             font-family: "Courier New", "Lucida Console", sans-serif !important;
             font-size: 8pt !important; /* Asegura un tamaño compacto */
+            font-weight: 700 !important;
             line-height: 1.1; /* Reduce el espacio entre líneas */
 
-            
-            /* CLAVE: Reducir el tamaño de la fuente para que el texto quepa */
-            font-size: 8pt; 
-             /* FUENTE CLAVE para impresoras térmicas */
+            /* Usar la fuente del sistema para máxima compatibilidad */
+        font-family: monospace !important; 
+        font-size: 8pt !important; 
+        font-weight: 700 !important;
         font-family: "Courier New", "Lucida Console", sans-serif !important;
-        font-size: 8pt !important; /* Asegura un tamaño compacto */
         line-height: 1.1; /* Reduce el espacio entre líneas */
     }
 
@@ -44,6 +44,8 @@
         width: 100% !important;
         /* Forzar que las tablas no tengan bordes ni espacios extra */
         border-collapse: collapse; 
+        padding-bottom: 3rem;
+        margin-bottom: 3rem;
     }
 
     td, th {
@@ -75,4 +77,10 @@
   justify-content: space-between;
   align-items: center;
   /* border: 1px solid red; */
+}
+
+.seccion__form{
+    width: 60%;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
 }
