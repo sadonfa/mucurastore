@@ -2,18 +2,20 @@ from django.core.validators import MaxValueValidator
 from django.db import models
 from customers.models import Customers
 from products.models import Products
+from decimal import Decimal
 
 # Create your models here.
 
-# Opciones de pago
-PAGO_CHOICES = [
-    ('efectivo', 'Efectivo'),
-    ('cxc', 'Cuenta por Cobrar'),
-    ('transferencia', 'Transferencia Bancaria'),
-    ('otro', 'Otro'),
-]
+
 
 class Orders(models.Model):
+    # Opciones de pago
+    FORMA_PAGO_CHOICES = [
+        ('efectivo', 'Efectivo'),
+        ('cxc', 'Cuenta por Cobrar'),
+        ('transferencia', 'Transferencia Bancaria'),
+        ('otro', 'Otro'),
+    ]
     cliente = models.ForeignKey(Customers, on_delete=models.CASCADE, verbose_name="Cliente")
     name = models.CharField(max_length=150, verbose_name="Nombre")
     description = models.CharField(max_length=250, verbose_name="Descripcion")
@@ -22,10 +24,18 @@ class Orders(models.Model):
      # NUEVO CAMPO PARA LA FORMA DE PAGO
     forma_pago = models.CharField(
         max_length=50,
-        choices=PAGO_CHOICES,
+        choices=FORMA_PAGO_CHOICES,
         default='efectivo',
         verbose_name="Forma de Pago"
     )
+
+    def get_total_price(self):
+        """Calcula el precio total sumando los subtotales de todos los artículos."""
+        total = Decimal(0)
+        # Itera sobre los artículos relacionados
+        for article in self.article_set.all():
+            total += article.cash * Decimal(article.cantidad)
+        return total
 
     class Meta:
         verbose_name = "Pedido"

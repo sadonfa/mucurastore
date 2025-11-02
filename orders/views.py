@@ -18,6 +18,7 @@ import csv
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required 
+from django.db.models import Sum, Case, When, DecimalField, F 
 
 @login_required
 def create_order(request):
@@ -240,6 +241,7 @@ def order_list(request):
     
     orders_queryset = Orders.objects.all().order_by('-created')
     selected_date = None
+    payment_summary = {} 
     total_sales = Decimal(0)
 
     if date_str:
@@ -254,13 +256,53 @@ def order_list(request):
             # 3. Filtrar el queryset por el rango de tiempo
             orders_queryset = orders_queryset.filter(created__range=(start_of_day, end_of_day))
             
+
+            order_ids = orders_queryset.values_list('pk', flat=True)
+
+            if order_ids.exists():
+                
+                # Anotar el subtotal calculado en cada artículo (cash * cantidad)
+                articles_with_subtotal = Article.objects.filter(order__in=order_ids).annotate(
+                    subtotal=F('cash') * F('cantidad')
+                )
+                
+                # Mapear los códigos de forma de pago a sus nombres legibles
+                payment_choices = dict(Orders.FORMA_PAGO_CHOICES)
+                
+                # Agrupar los subtotales por la forma de pago de su orden padre
+                payment_totals = articles_with_subtotal.values('order__forma_pago').annotate(
+                    total=Sum('subtotal', output_field=DecimalField())
+                ).order_by('order__forma_pago')
+
+                total_sales = Decimal(0) # <-- ¡CLAVE! Asegurar que empieza en 0
+                payment_summary = {}     # <-- ¡CLAVE! Reiniciar el resumen
+
+                # Construir el resumen legible
+                for item in payment_totals:
+                    forma_pago_code = item['order__forma_pago']
+                    forma_pago_name = payment_choices.get(forma_pago_code, f"Código {forma_pago_code}")
+                    
+                    payment_summary[forma_pago_name] = item['total']
+                    total_sales += item['total'] # Sumar al total general
+
             # 4. Calcular el total de ventas de los pedidos filtrados
-            for order in orders_queryset:
-                # Itera sobre los artículos de cada orden para calcular el total
-                for article in order.article_set.all():
-                    subtotal = article.cash * Decimal(article.cantidad)
-                    total_sales += subtotal
+            # for order in orders_queryset:
+            #     # Itera sobre los artículos de cada orden para calcular el total
+            #     for article in order.article_set.all():
+            #         subtotal = article.cash * Decimal(article.cantidad)
+            #         total_sales += subtotal
             
+
+            else:
+                 # Si no hay órdenes filtradas
+                 total_sales = Decimal(0)
+                 payment_summary = {}
+        
+         # Si no se filtra por fecha, los valores deben ser 0 o vacío
+        # if not date_str:
+        #     total_sales = Decimal(0)
+        #     payment_summary = {}
+
         except ValueError:
             # La fecha no es válida, no se aplica filtro
             pass
@@ -269,6 +311,7 @@ def order_list(request):
         'orders': orders_queryset,
         'selected_date': selected_date.strftime('%Y-%m-%d') if selected_date else None,
         'total_sales': total_sales,
+        'payment_summary': payment_summary,
         'is_cierre': bool(date_str), # Usado en la plantilla para mostrar el resumen
     }
     
@@ -299,22 +342,30 @@ def export_orders_to_csv(request):
         'ID Pedido', 
         'Fecha Creacion', 
         'Nombre Cliente', 
-        'Email Cliente', 
         'Titulo Pedido', 
-        'Forma Pago'
+        'Forma Pago',
+        'Valor Total'
+
     ])
 
     # 5. Obtener los datos y escribirlos
     orders = Orders.objects.all().order_by('-created')
     
     for order in orders:
+        # Llama a la función/método del modelo para obtener el valor
+        valor_total = order.get_total_price() 
+        
+        # Opcional: Formatea el valor para que sea legible en Excel/CSV
+        # Convierte el valor a cadena y usa la coma como separador decimal (para formato europeo/latino)
+        valor_formateado = str(valor_total).replace('.', ',')
+
         writer.writerow([
             order.pk,
             order.created.strftime("%Y-%m-%d %H:%M:%S"), # Formato la fecha/hora
             f"{order.cliente.name} {order.cliente.lastname}", # Nombre completo
             order.cliente.email,
-            order.name,
-            order.get_forma_pago_display(), # Usa el valor legible
+            order.get_forma_pago_display(), # Usa el valor 
+            valor_formateado
         ])
 
     return response

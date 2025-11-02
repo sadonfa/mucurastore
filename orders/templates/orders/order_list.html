@@ -20,10 +20,28 @@
     <a href="{% url 'order_list' %}">Mostrar Todos</a>
 </form>
 
-{% if is_cierre %}
+{% comment %} {% if is_cierre %}
     <div style="margin-top: 20px; padding: 15px; border: 1px solid #007bff; background-color: #e9f5ff; border-radius: 5px;">
         <h3>📊 Resumen del Cierre Diario ({{ selected_date }})</h3>
         <p>Total de Pedidos en la lista: <strong>{{ orders|length }}</strong></p>
+        <p>Ventas Totales del Día: <strong>${{ total_sales|floatformat:2 }}</strong></p>
+    </div>
+{% endif %} {% endcomment %}
+
+{% if is_cierre %}
+    <div style="margin-top: 20px; padding: 15px; border: 1px solid #007bff; background-color: #e9f5ff; border-radius: 5px;">
+        <h3>📊 Resumen del Cierre Diario ({{ selected_date }})</h3>
+        
+        <h4>Desglose por Forma de Pago:</h4>
+        <ul>
+            {% for forma, total in payment_summary.items %}
+                <li>
+                    <strong>{{ forma }}:</strong> ${{ total|floatformat:2 }}
+                </li>
+            {% empty %}
+                <li>No hay ventas para este día.</li>
+            {% endfor %}
+        </ul>
         <p>Ventas Totales del Día: <strong>${{ total_sales|floatformat:2 }}</strong></p>
     </div>
 {% endif %}
@@ -35,7 +53,6 @@
         <tr>
             <th>ID</th>
             <th>Cliente</th>
-            <th>Título del Pedido</th>
             <th>Fecha</th>
             <th>Forma de Pago</th>
             <th>Acciones</th>
@@ -46,9 +63,9 @@
         <tr>
             <td>{{ order.pk }}</td>
             <td>{{ order.cliente.name }} {{ order.cliente.lastname }}</td>
-            <td>{{ order.name }}</td>
             <td>{{ order.created|date:"d M Y H:i" }}</td>
             <td>{{ order.get_forma_pago_display }}</td> 
+            <td>${{ order.get_total_price|floatformat:2 }}</td>
             <td>
                 <a href="{% url 'order_detail' order.pk %}">Ver Detalle</a>
             </td>

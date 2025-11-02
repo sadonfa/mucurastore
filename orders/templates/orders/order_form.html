@@ -1,4 +1,7 @@
 {% extends "layouts/base.html" %}
+{% load static %}
+{% comment %} {% load django_select2_tags %}  {% endcomment %}
+{% comment %} {% load django_select2 %} {% endcomment %}
 {% block title %} {{title}} {% endblock title %}
 
 {% block content %}
@@ -85,4 +88,18 @@
         // también se aplique a esas nuevas líneas.
     });
 </script>
+<script>
+        $(document).ready(function() {
+            // ¡Asegúrate de que 'id_cliente' sea el ID correcto de tu campo!
+            $('#id_cliente').select2({
+                 placeholder: "Busca o selecciona un cliente",
+                 allowClear: true // Opcional: permite borrar la selección
+            }); 
+        });
+    </script>
 {% endblock content %}
+
+{% block extra_js %}
+     {{ block.super }} {# Esto mantiene cualquier JS que ya estuviera en el bloque #}
+   
+{% endblock extra_js %}

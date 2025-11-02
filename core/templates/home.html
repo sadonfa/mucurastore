@@ -1,12 +1,14 @@
 {% extends "layouts/base.html" %}
+{% load static %}
+
 
 {% block title %} {{title}} {% endblock title %}
 
 {% block content %}
 
 <div class="content__home">
-<h1> {{title}} </h1>
-
+    <h1  class="producto__title"> Home </h1>
+    <img src="{% static 'image/logo.png' %}" class="home__image" alt="Logo">
 </div>
 
 

@@ -1,11 +1,13 @@
 {% extends "layouts/inicio.html" %}  
 {% comment %} Asegúrate de cambiar "base.html" por el nombre de tu plantilla base si es diferente {% endcomment %}
+{% load static %}
 
 {% block title %}Iniciar Sesión{% endblock %}
 
 {% block content %}
 <div class="login__principal" >
-    <h2 class="producto__title">Mucura Store</h2>
+    
+     <img src="{% static 'image/logo.png' %}" class="home__image" alt="Logo">
 
     {% if form.errors %}
         <p style="color: red;">
@@ -21,7 +23,7 @@
         {% endif %}
     {% endif %}
 
-    <form method="post" action="{% url 'login' %}">
+    <form method="post" class="login__form" action="{% url 'login' %}">
         {% csrf_token %}
 
         <p>

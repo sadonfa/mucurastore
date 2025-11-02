@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% comment %} {% load django_select2 %} {% endcomment %}
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -11,56 +12,46 @@
     <link rel="stylesheet" href="{% static 'css/reset.css' %} " />
     <link rel="stylesheet" href="{% static 'css/fonts.css' %} " />
     <link rel="stylesheet" href="{% static 'css/base.css' %} " />
+    <link rel="stylesheet" href="{% static 'style.css' %} " />
     <link rel="stylesheet" href="{% static 'css/products.css' %} " />
     <link rel="stylesheet" href="{% static 'css/orders.css' %} " />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
     <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
     
-    {% comment %} HEADER  {% endcomment %}
-    <header class="header">
-        <div class="header__logo">
-            <h1 class=logo__text >Mucura Store</h1>
-        </div>
-        <div class="header__info">
-            {% if user.is_authenticated %}
-                Usuario: <strong>{{ user.username }}</strong>
-                | 
-                 <form method="post" action="{% url 'logout' %}" style="display: inline;">
-            {% csrf_token %}
-            <button type="submit" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
-                Cerrar Sesión
-            </button>
-        </form>
-            {% else %}
-                <a href="{% url 'login' %}">Iniciar Sesión</a>
-            {% endif %}
-        </div>
-    </header>
+   
 
     <div class="principal">
 
          {% comment %} SIDEBAR  {% endcomment %}
     <aside class="aside">
+
+        <div class="aside__logo">
+            {% comment %} <img src="{% static 'image/mini_logo.png' %}" class="logo" alt="Logo"> {% endcomment %}
+            <h1 class=logo__text >Mucura Store</h1>
+        </div>
+
         <ul class="aside__nav">
             <li class="nav__item">
-               <a href=" {% url 'home' %} ">Home</a> </li>
+               <i class="fa-solid fa-house"></i><a href=" {% url 'home' %} ">Home</a> </li>
 
                 {% if user.is_authenticated %}
                      {% if perms.orders.view_orders %} 
-                        <li class="nav__item"> <a href="{% url 'order_create' %}"> Pedidos </a> </li>
+                       <li class="nav__item"> <i class="fa-solid fa-rectangle-list"></i> <a href="{% url 'order_create' %}"> Pedidos </a> </li>
                      {% endif %}
                     
-                        <li class="nav__item"> <a href="{% url 'order_list' %}"> Lista de pedidos </a> </li>
+                        <li class="nav__item"><i class="fa-solid fa-table-list"></i> <a href="{% url 'order_list' %}"> Lista de pedidos </a> </li>
                         
                      {% if perms.customers.view_customers %} 
                         <li class="nav__item">
-                            <a href="{% url 'customer_list' %}">Clientes</a></li>
+                            <i class="fa-solid fa-users"></i><a href="{% url 'customer_list' %}">Clientes</a></li>
                     {% endif %}
                     {% if perms.products.view_products %} 
                         <li class="nav__item">
-                        <a href="{% url 'product_list' %}">Productos </a> 
+                            <i class="fa-solid fa-box"></i><a href="{% url 'product_list' %}">Productos </a> 
                         </li>
                     {% endif %}
              {% endif %}
@@ -69,19 +60,59 @@
         <footer class="footer">
         &copy; Mucura Store 2025
     </footer>
+    {% comment %} FOOTER  {% endcomment %}
     </aside>
+
+
+
     {% comment %} CONTENT  {% endcomment %}
     
     <div class="principal__content">
+         {% comment %} HEADER  {% endcomment %}
+    <header class="header">
+        
+        <div class="header__info">
+            {% if user.is_authenticated %}
+                <strong>{{ user.username }}</strong>
+                | 
+                 <form method="post" action="{% url 'logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </form>
+            {% else %}
+                <a href="{% url 'login' %}">Iniciar Sesión</a>
+            {% endif %}
+        </div>
+    </header>
+
     {% block content %}{% endblock content %}
+
     </div>
     </div>
 
    
 
+     
+
     
 
-    {% comment %} FOOTER  {% endcomment %}
+    
+
+    {% block extra_js %}
+       <link href="{% static 'django_select2/django_select2.css' %}" rel="stylesheet" />
+    <script src="{% static 'django_select2/django_select2.js' %}"></script>
+    <script>
+        // Inicializar Select2 en los selectores.
+        // Reemplaza .django-select2 con el selector de tu campo si es necesario.
+        $(function() {
+            $(".django-select2").select2();
+        });
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    {% endblock extra_js %}
     
 </body>
 </html>

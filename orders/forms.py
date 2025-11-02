@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory
 from .models import Orders, Article, Products
+from django_select2.forms import Select2Widget
 
 # 1. Formulario principal para el encabezado del Pedido
 class OrderForm(forms.ModelForm):
@@ -8,6 +9,11 @@ class OrderForm(forms.ModelForm):
         model = Orders
         # Solo necesitamos el cliente, el nombre y la descripción para el encabezado.
         fields = ['cliente', 'forma_pago']
+
+        widgets = {
+            'cliente': Select2Widget(attrs={'data-placeholder': 'Buscar Cliente...'}),
+        }
+
         labels = {
             'cliente': 'Cliente',
         }
@@ -23,6 +29,7 @@ class ArticleForm(forms.ModelForm):
         # Bloquear el campo 'cash' usando widgets
         widgets = {
             'cash': forms.TextInput(attrs={'readonly': 'readonly'}),
+            'product': Select2Widget(attrs={'data-placeholder': 'Buscar Producto...'}),
         }
         
 
